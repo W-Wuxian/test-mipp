@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+
+# VScode
+vscode
+
+# R
+.Rhistory
+
+# exec
+fmadd
+mippfmadd
