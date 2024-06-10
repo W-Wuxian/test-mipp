@@ -1,0 +1,16 @@
+#!/bin/bash
+#SBATCH --job-name=openmp_matmul
+#SBATCH --output=openmp_matmul.out
+#SBATCH --error=openmp_matmul.err
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=2
+#SBATCH --time=00:10:00
+#SBATCH --mem=3GB
+
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+
+for i in 1000 2000 3000 4000 5000 6000 7000 8000 9000 10000
+do
+    ./main $i $i $i 10 $SLURM_CPUS_PER_TASK
+done

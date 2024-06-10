@@ -1,0 +1,43 @@
+#!/bin/bash
+#SBATCH --job-name=omp_matmul
+#SBATCH --output=omp_matmul.out
+#SBATCH --error=omp_matmul.err
+#SBATCH --partition=celia
+#SBATCH --nodelist=n[003]
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=16
+#SBATCH --time=02:00:00
+#SBATCH --mem=3GB
+
+module purge
+module load compiler/2023.0.0
+
+make
+wait
+
+export OMP_NUM_THREADS=1
+./omp_matmul 2140 2012 980 5
+wait
+./omp_matmul 4280 4024 1960 5
+wait
+export OMP_NUM_THREADS=2
+./omp_matmul 2140 2012 980 5
+wait
+./omp_matmul 4280 4024 1960 5
+export OMP_NUM_THREADS=4
+./omp_matmul 2140 2012 980 5
+wait
+./omp_matmul 4280 4024 1960 5
+export OMP_NUM_THREADS=4
+./omp_matmul 2140 2012 980 5
+wait
+./omp_matmul 4280 4024 1960 5
+export OMP_NUM_THREADS=8
+./omp_matmul 2140 2012 980 5
+wait
+./omp_matmul 4280 4024 1960 5
+export OMP_NUM_THREADS=16
+./omp_matmul 2140 2012 980 5
+wait
+./omp_matmul 4280 4024 1960 5

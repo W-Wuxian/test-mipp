@@ -1,0 +1,14 @@
+#!/bin/bash
+#SBATCH --job-name=oacc_matmul
+#SBATCH --output=oacc_matmul.out
+#SBATCH --error=oacc_matmul.err
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=1
+#SBATCH --gres=gpu:1
+#SBATCH --time=02:00:00
+#SBATCH --mem=3GB
+
+srun ./oacc_matmul 2140 2012 980 5
+wait
+srun ./oacc_matmul 4280 4024 1960 5

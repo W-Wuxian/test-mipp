@@ -1,0 +1,40 @@
+#!/bin/bash
+#SBATCH --job-name=oacc_tiled_matmul
+#SBATCH --output=oacc_tiled_matmul%x_%j.out
+#SBATCH --error=oacc_tiled_matmul%x_%j.err
+#SBATCH --partition=gpu
+#SBATCH --nodelist=gpu[02]
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=1
+#SBATCH --gres=gpu:1
+#SBATCH --time=02:00:00
+#SBATCH --mem=20GB
+
+module purge
+module load nvidia_hpc_sdk/24.3/nvhpc-hpcx
+
+make
+wait
+#srun ./oacc_tiled_matmul 2140 2012 980 1 5
+#wait
+#srun ./oacc_tiled_matmul 4280 4024 1960 1 5
+#wait
+#srun ./oacc_tiled_matmul 2140 2012 980 16 5
+#wait
+#srun ./oacc_tiled_matmul 4280 4024 1960 16 5
+#wait
+#srun ./oacc_tiled_matmul 2140 2012 980 32 5
+#wait
+#srun ./oacc_tiled_matmul 4280 4024 1960 32 5
+#wait
+#srun ./oacc_tiled_matmul 2140 2012 980 64 5
+#wait
+#srun ./oacc_tiled_matmul 4280 4024 1960 64 5
+srun ./oacc_tiled_matmul 47120 16096 7840 16 5
+wait
+srun ./oacc_tiled_matmul 47120 16096 7840 32 5
+wait
+srun ./oacc_tiled_matmul 47120 16096 7840 128 5
+wait
+srun ./oacc_tiled_matmul 47120 16096 7840 256 5

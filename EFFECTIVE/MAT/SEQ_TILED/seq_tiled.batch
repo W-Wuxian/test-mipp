@@ -1,0 +1,36 @@
+#!/bin/bash
+#SBATCH --job-name=seq_tiled_matmul
+#SBATCH --output=seq_tiled_matmul.out
+#SBATCH --error=seq_tiled_matmul.err
+#SBATCH --partition=celia
+#SBATCH --nodelist=n[002]
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=1
+#SBATCH --time=02:00:00
+#SBATCH --mem=3GB
+
+module purge
+module load compiler/2023.0.0
+
+make
+wait
+./seq_tiled_matmul 2140 2012 980 1 5
+wait
+./seq_tiled_matmul 4280 4024 1960 1 5
+wait
+./seq_tiled_matmul 2140 2012 980 16 5
+wait
+./seq_tiled_matmul 4280 4024 1960 16 5
+wait
+./seq_tiled_matmul 2140 2012 980 32 5
+wait
+./seq_tiled_matmul 4280 4024 1960 32 5
+wait
+./seq_tiled_matmul 2140 2012 980 64 5
+wait
+./seq_tiled_matmul 4280 4024 1960 64 5
+wait
+./seq_tiled_matmul 2140 2012 980 128 5
+wait
+./seq_tiled_matmul 4280 4024 1960 128 5

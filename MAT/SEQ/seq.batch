@@ -1,0 +1,13 @@
+#!/bin/bash
+#SBATCH --job-name=seq_matmul
+#SBATCH --output=seq_matmul.out
+#SBATCH --error=seq_matmul.err
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=1
+#SBATCH --time=02:00:00
+#SBATCH --mem=3GB
+
+./seq_matmul 2140 2012 980 5
+wait
+./seq_matmul 4280 4024 1960 5

@@ -1,0 +1,63 @@
+sequential_matmul:
+     35, Generating implicit firstprivate(nj,nk,ni,i)
+         Generating NVIDIA GPU code
+         37, #pragma acc loop gang /* blockIdx.x */
+         39, #pragma acc loop vector(128) /* threadIdx.x */
+         40, #pragma acc loop seq
+     35, Generating default present(b[:],c[:],d[:],a[:])
+     39, Loop is parallelizable
+     40, Complex loop carried dependence of a->,d->,b-> prevents parallelization
+         Loop carried dependence of d-> prevents parallelization
+         Loop carried backward dependence of d-> prevents vectorization
+naive_matmul_acc_tiled:
+     48, Generating implicit firstprivate(nj,nk,ni,i)
+         Generating NVIDIA GPU code
+         50, #pragma acc loop gang, vector tile(32,32) /* blockIdx.x threadIdx.x */
+         51,   /* blockIdx.x threadIdx.x tiled */
+         52, #pragma acc loop seq
+     48, Generating default present(b[:],c[:],d[:],a[:])
+     52, Complex loop carried dependence of a->,d->,b-> prevents parallelization
+         Loop carried dependence of d-> prevents parallelization
+         Loop carried backward dependence of d-> prevents vectorization
+seq_tiled_matmul:
+     60, Generating implicit firstprivate(nj,ni,nk,i,tile)
+         Generating NVIDIA GPU code
+         63, #pragma acc loop gang collapse(2) /* blockIdx.x */
+         64,   /* blockIdx.x collapsed */
+         66, #pragma acc loop worker(8) /* threadIdx.y */
+         68, #pragma acc loop vector(128) /* threadIdx.x */
+         70, #pragma acc loop seq
+     60, Generating default present(a[:],d[:],b[:])
+     64, Generating implicit private(ii)
+     66, Loop is parallelizable
+         Generating implicit private(jj)
+     68, Loop is parallelizable
+     76, Generating implicit firstprivate(nj,ni,i)
+         Generating NVIDIA GPU code
+         78, #pragma acc loop gang /* blockIdx.x */
+         80, #pragma acc loop vector(128) /* threadIdx.x */
+     76, Generating default present(d[:],c[:])
+     80, Loop is parallelizable
+checksum:
+     88, Outer loop unrolled 1 times (completely unrolled)
+     89, Loop nest collapsed
+         Generated vector simd code for the loop containing reductions
+         Loop unrolled 4 times
+main:
+    120, Loop not fused: different loop trip count
+         Generated vector simd code for the loop
+    121, Loop not fused: function call before adjacent loop
+         Generated vector simd code for the loop
+    122, Recognized memory set idiom
+    125, Generating copyin(A[:ni*nk],B[:nj*nk]) [if not already present]
+         Generating create(D[:nj*ni]) [if not already present]
+         Generating copyin(C[:nj*ni]) [if not already present]
+    126, Loop not vectorized/parallelized: contains call
+    131, Generating update self(D[:nj*ni])
+         FMA (fused multiply-add) instruction(s) generated
+    132, checksum inlined, size=9 (inline) file oacc_matmul.c (86)
+          88, Loop not fused: function call before adjacent loop
+          89, Generated vector simd code for the loop containing reductions
+              Loop unrolled 4 times
+    136, Generating update device(D[:nj*ni])
+    161, Loop not vectorized/parallelized: contains call
